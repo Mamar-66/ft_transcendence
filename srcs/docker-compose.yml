@@ -5,8 +5,8 @@ services:
     ports:
       - "8080:80"
       #- "443:443"
-    volumes:
-      - ./requirements/modsecurity/conf/modsecurity.conf:/etc/nginx/modsec.conf
+    #volumes:
+      #- ./requirements/modsecurity/conf/modsecurity.conf:/etc/nginx/modsec.conf
       #- ./modsec-logs.log:/var/log/modsec_audit.log
     #depends_on:
     #  - backend

@@ -7,14 +7,13 @@ RUN apk update && apk add --no-cache \
 	nano vim \
 	&& rm -rf /var/cache/apk/*
 
-#COPY ./tools/help_config.sh /usr/local/bin/fix_nginx.sh
-COPY ./conf/nginx.conf /etc/nginx/conf.d/nginx.conf
+COPY ./tools/help_config.sh /usr/local/bin/fix_nginx.sh
+COPY ./conf/nginx.conf /etc/nginx/nginx.conff
 
-#RUN chmod +x /usr/local/bin/fix_nginx.sh
-# Copier le fichier principal de configuration Nginx
+RUN chmod +x /usr/local/bin/fix_nginx.sh
 
 # Copier la configuration ModSecurity (si tu veux en personnaliser une)
-#COPY ./conf/modsecurity.conf /etc/nginx/modsec.conf
+COPY ./conf/modsecurity.conf /etc/nginx/modsec.conf
 
 # Copier des règles de sécurité supplémentaires (si besoin)
 # COPY custom_rules/ /usr/local/modsecurity-crs/base_rules/
@@ -22,7 +21,6 @@ COPY ./conf/nginx.conf /etc/nginx/conf.d/nginx.conf
 # Exposer les ports 80 (HTTP) et 443 (HTTPS) pour Nginx
 EXPOSE 80
 
-#RUN /usr/local/bin/fix_nginx.sh
-#ENTRYPOINT ["/usr/local/bin/fix_nginx.sh"]
-# Lancer Nginx en mode premier plan
+ENTRYPOINT ["/usr/local/bin/fix_nginx.sh"]
+
 CMD ["nginx", "-g", "daemon off;"]
