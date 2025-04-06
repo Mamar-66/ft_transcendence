@@ -4,13 +4,13 @@ USER root
 
 # Assurer les bonnes permissions sur le répertoire
 RUN apk update && apk add --no-cache \
-nano vim \
-&& rm -rf /var/cache/apk/*
+	nano vim \
+	&& rm -rf /var/cache/apk/*
 
-COPY ./tools/help_config.sh /usr/local/bin/fix_nginx.sh
-COPY ./conf/nginx.conf /etc/nginx/nginx.conff
+#COPY ./tools/help_config.sh /usr/local/bin/fix_nginx.sh
+COPY ./conf/nginx.conf /etc/nginx/conf.d/nginx.conf
 
-RUN chmod +x /usr/local/bin/fix_nginx.sh
+#RUN chmod +x /usr/local/bin/fix_nginx.sh
 # Copier le fichier principal de configuration Nginx
 
 # Copier la configuration ModSecurity (si tu veux en personnaliser une)
@@ -23,6 +23,6 @@ RUN chmod +x /usr/local/bin/fix_nginx.sh
 EXPOSE 80
 
 #RUN /usr/local/bin/fix_nginx.sh
-ENTRYPOINT ["/usr/local/bin/fix_nginx.sh"]
+#ENTRYPOINT ["/usr/local/bin/fix_nginx.sh"]
 # Lancer Nginx en mode premier plan
 CMD ["nginx", "-g", "daemon off;"]

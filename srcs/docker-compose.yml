@@ -10,3 +10,10 @@ services:
       #- ./modsec-logs.log:/var/log/modsec_audit.log
     #depends_on:
     #  - backend
+    restart: always
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
