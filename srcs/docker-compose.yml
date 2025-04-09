@@ -4,16 +4,24 @@ services:
     container_name: modsecurity
     ports:
       - "8080:80"
-      #- "443:443"
-    #volumes:
-      #- ./requirements/modsecurity/conf/modsecurity.conf:/etc/nginx/modsec.conf
-      #- ./modsec-logs.log:/var/log/modsec_audit.log
-    #depends_on:
-    #  - backend
-    restart: always
+      - "8443:443"
+    volumes:
+      - ./requirements/modsecurity/log:/var/log/modsecurity
+    depends_on:
+      - backend
     networks:
-      - network
+      - internal_network 
+    restart: always
+
+  backend:
+    build: ./requirements/backend
+    container_name: backend
+    expose:
+      - "80"
+    networks:
+      - internal_network 
+    restart: always
 
 networks:
-  network:
+  internal_network:
     driver: bridge

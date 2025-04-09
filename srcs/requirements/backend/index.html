@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test d'injection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f0f0f0;
+    }
+    form {
+      margin-bottom: 30px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input[type="text"] {
+      width: 300px;
+      padding: 10px;
+    }
+    input[type="submit"] {
+      padding: 10px 20px;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Page de test d'injection</h1>
+
+  <form method="GET" action="http://localhost:5000/test">
+    <h3>Test GET</h3>
+    <input type="text" name="input" placeholder="Essaye une injection ici...">
+    <input type="submit" value="Envoyer GET">
+  </form>
+
+  <form method="POST" action="http://localhost:5000/test">
+    <h3>Test POST</h3>
+    <input type="text" name="input" placeholder="Essaye une injection ici...">
+    <input type="submit" value="Envoyer POST">
+  </form>
+</body>
+</html>
