@@ -29,7 +29,8 @@ COPY ./conf/nginx.conf /etc/nginx/nginx.conff
 COPY ./conf/default.conf /etc/nginx/my_config/default.conf
 COPY ./conf/modsecurity.conf /etc/nginx/modsec/modsecurity.conf
 
+#USER nginx
+
 EXPOSE 80 443
 
-#CMD ["nginx", "-g", "daemon off;"]
 CMD ["nginx", "-c", "/etc/nginx/nginx.conff", "-g", "daemon off;"]

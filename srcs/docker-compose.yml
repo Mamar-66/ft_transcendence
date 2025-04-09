@@ -6,7 +6,7 @@ services:
       - "8080:80"
       - "8443:443"
     volumes:
-      - ./requirements/modsecurity/log:/var/log/modsecurity
+      - ./requirements/modsecurity/log:/var/log/modsecurity:rw
     depends_on:
       - backend
     networks:
