@@ -1,0 +1,102 @@
+
+services:
+  #modsecurity:
+  #  container_name: nginx_modsecurity
+  #  build: ./nginx_modsecurity
+  #  ports:
+  #    - "8080:80"
+  #    - "8443:443"
+  #  volumes:
+  #    - ./requirements/modsecurity/log:/var/log/modsecurity:rw
+  #  depends_on:
+  #    - django
+  #  networks:
+  #    - internal_network
+  #  restart: always
+
+  #django:
+  #  container_name: django
+  #  build:
+  #    context: ./requirements/django
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - "8000"
+  #  depends_on:
+  #    postgres:
+  #      condition: service_healthy
+  #  environment:
+  #    POSTGRES_USER: ${POSTGRES_USER}
+  #    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #    POSTGRES_DB: ${POSTGRES_DB}
+  #    POSTGRES_PORT: 5432
+  #    POSTGRES_HOST: postgres
+  #    DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+  #    DJANGO_SUPERUSER: ${DJANGO_SUPERUSER}
+  #    DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD}
+  #    DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL}
+  #  env_file:
+  #    - .env
+  #  restart: always
+  #  networks:
+  #    - internal_network
+
+# ----------------------------                  ----------------------------
+# ---------------------------- HARCHICORP_VAULT ----------------------------
+# ----------------------------                  ----------------------------
+
+  hashicorp_vault:
+    container_name: hashicorp_vault
+    build: ./requirements/hashicorp_vault
+    environment:
+      VAULT_USER: ${VAULT_USER}
+      VAULT_PASSWORD: ${VAULT_PASSWORD}
+      VAULT_DB: ${VAULT_DB}
+      VAULT_ADDR: ${VAULT_ADDR}
+    cap_add:
+      - IPC_LOCK
+    depends_on:
+      - postgres
+    ports:
+      - "80:8200"
+    networks:
+      - db_network 
+    restart: always
+
+# ----------------------------                  ----------------------------
+# ----------------------------     POSTGRES     ----------------------------
+# ----------------------------                  ----------------------------
+
+  postgres:
+    container_name: postgres
+    build: ./requirements/postgresql
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      VAULT_USER: ${VAULT_USER}
+      VAULT_PASSWORD: ${VAULT_PASSWORD}
+      VAULT_DB: ${VAULT_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "5432"
+    networks:
+      - db_network
+
+# ----------------------------                  ----------------------------
+# ----------------------------        END       ----------------------------
+# ----------------------------                  ----------------------------
+
+volumes:
+  postgres_data:
+
+networks:
+  internal_network:
+    driver: bridge
+  db_network:
+    driver: bridge
