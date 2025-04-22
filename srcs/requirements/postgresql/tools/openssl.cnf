@@ -1,0 +1,22 @@
+[ req ]
+default_bits        = 2048
+default_keyfile     = private_key.pem
+distinguished_name  = req_distinguished_name
+req_extensions      = v3_req
+prompt              = no
+
+[ req_distinguished_name ]
+C = FR
+ST = Occitanie
+L = Perpignan
+O = 42 School
+OU = omfelk_dabea_kbrener_gdaignea_rmichel
+CN = postgres
+
+[ v3_req ]
+keyUsage = keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = postgres

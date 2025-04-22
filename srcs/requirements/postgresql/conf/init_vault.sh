@@ -31,3 +31,12 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$VAULT_DB" <<-EOSQ
 EOSQL
 
 echo "VAULT database and table ready."
+
+echo "
+# SSL configuration
+ssl = on
+ssl_cert_file = '/certs/publicCertificat.crt'
+ssl_key_file = '/certs/privatKey.key'
+" >> /var/lib/postgresql/data/postgresql.conf
+
+echo "add SSL and SSL"
