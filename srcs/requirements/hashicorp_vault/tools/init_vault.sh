@@ -30,10 +30,13 @@ echo "Vault unseal complete."
 # Get root token from keys.json
 ROOT_TOKEN=$(jq -r ".root_token" "$VAULT_KEYS_FILE")
 
+# Export the root token so Vault commands use it
+export VAULT_TOKEN="$ROOT_TOKEN"
+
 # Enable KV if not enabled
-if ! vault secrets list -token="$ROOT_TOKEN" | grep -q '^secret/'; then
+if ! vault secrets list | grep -q '^secret/'; then
   echo "Enabling kv-v2 at path secret/"
-  vault secrets enable -path=secret kv-v2 -token="$ROOT_TOKEN"
+  vault secrets enable -path=secret kv-v2
 fi
 
 echo "Secret added. Script finished."

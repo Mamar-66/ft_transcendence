@@ -1,13 +1,14 @@
 
 storage "postgresql" {
-  connection_url = "postgresql://vault:vault1234@postgres:5432/vault_db?sslmode=disable"
+  connection_url = "postgresql://vault:vault1234@postgres:5432/vault_db?sslmode=require"
 }
 
 listener "tcp" {
   address     = "0.0.0.0:8200"
-  tls_disable = 1
+  tls_cert_file = "/certs/publicCertificat.crt"
+  tls_key_file  = "/certs/privatKey.key"
 }
 
-api_addr = "http://localhost:80"
-ui = true
-disable_mlock = true
+api_addr = "https://vault.local:8200"
+# ui = true
+disable_mlock = true 

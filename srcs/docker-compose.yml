@@ -56,14 +56,15 @@ services:
       VAULT_PASSWORD: ${VAULT_PASSWORD}
       VAULT_DB: ${VAULT_DB}
       VAULT_ADDR: ${VAULT_ADDR}
+      VAULT_SKIP_VERIFY: ${VAULT_SKIP_VERIFY}
     cap_add:
       - IPC_LOCK
     depends_on:
       - postgres
-    ports:
-      - "8200"
+    #ports:
+    #  - "8200"
     networks:
-      - db_network 
+      - vault_network 
     restart: always
 
 # ----------------------------                  ----------------------------
@@ -87,10 +88,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-    ports:
-      - "5432"
+    #ports:
+    #  - "5432"
     networks:
-      - db_network
+      - vault_network
 
 # ----------------------------                  ----------------------------
 # ----------------------------        END       ----------------------------
@@ -102,5 +103,6 @@ volumes:
 networks:
   internal_network:
     driver: bridge
-  db_network:
+  vault_network:
+    name: vault_network
     driver: bridge
