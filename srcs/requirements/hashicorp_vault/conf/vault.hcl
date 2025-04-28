@@ -9,6 +9,6 @@ listener "tcp" {
   tls_key_file  = "/certs/privatKey.key"
 }
 
-api_addr = "https://vault.local:8200"
+api_addr = "https://hashicorp_vault:8200"
 # ui = true
 disable_mlock = true 

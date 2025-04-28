@@ -27,7 +27,6 @@ fi
 
 echo "Vault unseal complete."
 
-# Get root token from keys.json
 ROOT_TOKEN=$(jq -r ".root_token" "$VAULT_KEYS_FILE")
 
 # Export the root token so Vault commands use it
@@ -39,4 +38,8 @@ if ! vault secrets list | grep -q '^secret/'; then
   vault secrets enable -path=secret kv-v2
 fi
 
+vault secrets enable database
+vault auth enable approle
+
 echo "Secret added. Script finished."
+echo "vault ready" > /vault/ready/vault_status.txt

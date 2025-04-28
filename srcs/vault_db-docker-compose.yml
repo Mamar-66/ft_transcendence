@@ -57,6 +57,8 @@ services:
       VAULT_DB: ${VAULT_DB}
       VAULT_ADDR: ${VAULT_ADDR}
       VAULT_SKIP_VERIFY: ${VAULT_SKIP_VERIFY}
+    volumes:
+      - ./requirements/hashicorp_vault/:/vault/ready:rw
     cap_add:
       - IPC_LOCK
     depends_on:
@@ -64,7 +66,8 @@ services:
     #ports:
     #  - "8200"
     networks:
-      - vault_network 
+      - vault_db_network
+      - vault_db_django_network
     restart: always
 
 # ----------------------------                  ----------------------------
@@ -91,18 +94,25 @@ services:
     #ports:
     #  - "5432"
     networks:
-      - vault_network
+      - vault_db_network
+      - vault_db_django_network
+
 
 # ----------------------------                  ----------------------------
 # ----------------------------        END       ----------------------------
 # ----------------------------                  ----------------------------
 
-volumes:
-  postgres_data:
-
 networks:
   internal_network:
     driver: bridge
-  vault_network:
-    name: vault_network
+  vault_db_network:
+    name: vault_db_network
     driver: bridge
+  vault_db_django_network:
+    name: vault_db_django_network
+    driver: bridge
+    external: true
+
+volumes:
+  postgres_data:
+
