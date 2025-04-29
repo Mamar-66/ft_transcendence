@@ -43,59 +43,75 @@ services:
   #  restart: always
   #  networks:
   #    - internal_network
+# ----------------------------                  ----------------------------
+# ----------------------------      DJANGO      ----------------------------
+# ----------------------------                  ----------------------------
+
+  django:
+    container_name: django
+    build:
+      context: ./requirements/django
+      dockerfile: Dockerfile
+    volumes:
+      - ./requirements/django/conf/app:/app
+    ports:
+      - "8080:8000"
+    restart: always
+    networks:
+      - internal_network
 
 # ----------------------------                  ----------------------------
 # ---------------------------- HARCHICORP_VAULT ----------------------------
 # ----------------------------                  ----------------------------
 
-  hashicorp_vault:
-    container_name: hashicorp_vault
-    build: ./requirements/hashicorp_vault
-    environment:
-      VAULT_USER: ${VAULT_USER}
-      VAULT_PASSWORD: ${VAULT_PASSWORD}
-      VAULT_DB: ${VAULT_DB}
-      VAULT_ADDR: ${VAULT_ADDR}
-      VAULT_SKIP_VERIFY: ${VAULT_SKIP_VERIFY}
-    volumes:
-      - ./requirements/hashicorp_vault/:/vault/ready:rw
-    cap_add:
-      - IPC_LOCK
-    depends_on:
-      - postgres
-    #ports:
-    #  - "8200"
-    networks:
-      - vault_db_network
-      - vault_db_django_network
-    restart: always
+  #hashicorp_vault:
+  #  container_name: hashicorp_vault
+  #  build: ./requirements/hashicorp_vault
+  #  environment:
+  #    VAULT_USER: ${VAULT_USER}
+  #    VAULT_PASSWORD: ${VAULT_PASSWORD}
+  #    VAULT_DB: ${VAULT_DB}
+  #    VAULT_ADDR: ${VAULT_ADDR}
+  #    VAULT_SKIP_VERIFY: ${VAULT_SKIP_VERIFY}
+  #  volumes:
+  #    - ./requirements/hashicorp_vault/:/vault/ready:rw
+  #  cap_add:
+  #    - IPC_LOCK
+  #  depends_on:
+  #    - postgres
+  #  #ports:
+  #  #  - "8200"
+  #  networks:
+  #    - vault_db_network
+  #    - vault_db_django_network
+  #  restart: always
 
 # ----------------------------                  ----------------------------
 # ----------------------------     POSTGRES     ----------------------------
 # ----------------------------                  ----------------------------
 
-  postgres:
-    container_name: postgres
-    build: ./requirements/postgresql
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      VAULT_USER: ${VAULT_USER}
-      VAULT_PASSWORD: ${VAULT_PASSWORD}
-      VAULT_DB: ${VAULT_DB}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    #ports:
-    #  - "5432"
-    networks:
-      - vault_db_network
-      - vault_db_django_network
+  #postgres:
+  #  container_name: postgres
+  #  build: ./requirements/postgresql
+  #  volumes:
+  #    - postgres_data:/var/lib/postgresql/data
+  #  environment:
+  #    POSTGRES_USER: ${POSTGRES_USER}
+  #    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #    POSTGRES_DB: ${POSTGRES_DB}
+  #    VAULT_USER: ${VAULT_USER}
+  #    VAULT_PASSWORD: ${VAULT_PASSWORD}
+  #    VAULT_DB: ${VAULT_DB}
+  #  healthcheck:
+  #    test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+  #    interval: 10s
+  #    timeout: 5s
+  #    retries: 3
+  #  #ports:
+  #  #  - "5432"
+  #  networks:
+  #    - vault_db_network
+  #    - vault_db_django_network
 
 
 # ----------------------------                  ----------------------------
@@ -104,6 +120,7 @@ services:
 
 networks:
   internal_network:
+    name: internal_network
     driver: bridge
   vault_db_network:
     name: vault_db_network

@@ -3,6 +3,7 @@
 sleep 1
 
 VAULT_KEYS_FILE="/vault/config/keys.json"
+DJANGO_USER_MANAGER="django_user_manager"
 
 # Vault operator init
 if vault status | grep -q 'Initialized.*false'; then
@@ -39,7 +40,14 @@ if ! vault secrets list | grep -q '^secret/'; then
 fi
 
 vault secrets enable database
+
 vault auth enable approle
+vault policy write django-policy django-policy.hcl
+
+vault write auth/approle/role/django-role \
+  token_policies="django-policy"
+vault read auth/approle/role/django-role/role-id > $DJANGO_USER_MANAGER
+vault write -f auth/approle/role/django-role/secret-id | grep "secret_id " >> $DJANGO_USER_MANAGER
 
 echo "Secret added. Script finished."
 echo "vault ready" > /vault/ready/vault_status.txt

@@ -1,27 +1,21 @@
 
-VAULT_DB_COMPOSE = ./srcs/vault_db-docker-compose.yml
-DJANGO = ./srcs/django-docker-compose.yml
+#VAULT_DB_COMPOSE = ./srcs/docker-compose.yml
 
-up: create_network vault_db-up django_up
+#up: create_network vault_db-up django_up
 
-create_network:
-	@docker network inspect vault_db_django_network > /dev/null 2>&1 || docker network create vault_db_django_network
-	@echo "\033[0;32mNetwork 'vault_db_django_network' is ready!\033[0m"
+#create_network:
+#	@docker network inspect vault_db_django_network > /dev/null 2>&1 || docker network create vault_db_django_network
+#	@echo "\033[0;32mNetwork 'vault_db_django_network' is ready!\033[0m"
 
-vault_db-up:
-	docker compose -f $(VAULT_DB_COMPOSE) build
-	docker compose -f $(VAULT_DB_COMPOSE) up -d
-	@echo "\033[1;33mWaiting for Vault to be ready (inside container)...\033[0m"
-	@until [ -f ./srcs/requirements/hashicorp_vault/vault_status.txt ] && grep -q "vault ready" ./srcs/requirements/hashicorp_vault/vault_status.txt; do \
-		echo "\033[1;33mVault not ready yet...\033[0m"; \
-		sleep 2; \
-	done
-	@echo "\033[0;32mVault is ready!\033[0m"
-
-#django_up:
-#	docker compose -f $(DJANGO) build
-#	docker compose -f $(DJANGO) up -d
-#	@echo "\033[0;32mDjango is ready!\033[0m"
+#vault_db-up:
+all:
+	docker compose -f ./srcs/docker-compose.yml up -d --build
+#@echo "\033[1;33mWaiting for Vault to be ready (inside container)...\033[0m"
+#@until [ -f ./srcs/requirements/hashicorp_vault/vault_status.txt ] && grep -q "vault ready" ./srcs/requirements/hashicorp_vault/vault_status.txt; do \
+#	echo "\033[1;33mVault not ready yet...\033[0m"; \
+#	sleep 2; \
+#done
+#@echo "\033[0;32mVault is ready!\033[0m"
 
 down:
 	@docker compose -f ./srcs/vault_db-docker-compose.yml down
